@@ -63,7 +63,7 @@ host 的 `telemetry_db` 指向该接收端 SQLite 文件。runner 查询新 coll
 
 这两项是当前实验的**外置自建组件**，公开包不内置，不能仅 `pip install` 获得：
 
-1. ZenTimings bundle：host 的 `zentimings_cli_bundle` 目录包含 `build-manifest.json` 和恰好四个文件：`ZenTimings.Export.exe`、`ZenStates-Core.dll`、`inpoutx64.dll`、`ZenTimings.Export.exe.config`。manifest 的 `files` 为 `{name,size,sha256}` 数组，记录这四个文件。`deploy` 先校验，再复制到目标以 manifest hash 命名的版本目录并核对传输 hash。普通 upstream [ZenTimings](https://github.com/irusanov/ZenTimings) GUI 不是这个 CLI 的下载替代。
+1. ZenTimings bundle：使用[我们的 ZenTimings-Mod fork](https://github.com/POEG1726/ZenTimings-Mod)，下载 [headless release](https://github.com/POEG1726/ZenTimings-Mod/releases/latest) 并验证校验和。host 的 `zentimings_cli_bundle` 目录包含 `build-manifest.json` 和恰好四个文件：`ZenTimings.Export.exe`、`ZenStates-Core.dll`、`inpoutx64.dll`、`ZenTimings.Export.exe.config`。manifest 的 `files` 为 `{name,size,sha256}` 数组，记录这四个文件。`deploy` 先校验，再复制到目标以 manifest hash 命名的版本目录并核对传输 hash。普通 upstream GUI 不是这个 CLI 的替代；详见 [integration](zentimings-mod.md)。
 2. 精确 saved-request reader：5mV profile 的 `readback_verification.saved_request_reader` 指向平台专用 `verify_vddp_request.py`，连同它的 NVAR/FV 解析依赖。接口为 `python READER --dump FILE --expected-mv INTEGER`，stdout 为 JSON，必须返回 `ok/exact_match/manual_match=true`、`expected_mv`，以及 `dump.sha256/size/unchanged_after_verification=true`。当前 F12d 检查 Tweaker/AOD 请求与 Manual selector；活跃 bank 选择仍是离线推断，不是物理电压测量。
 
 开发工作树保留原路径；发布导出将 reader 路径替换为 `external/bios-readback/verify_vddp_request.py`。准备对应工具后才运行精扫。若没有，保持 readback gate 失败并停止，不把 `require_exact_saved_requests` 改为 false 来绕过。目标 JSON 必须包含 `static.system/memory/spd`、`config.timings/aod/apob`、`readings.power_table/sensors/dimm`，用于完整证据与 SMU 读数交叉检查。ZenTimings 不设 GUI/logon autostart，只按 run 执行一次 CLI。

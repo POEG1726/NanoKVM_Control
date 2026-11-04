@@ -13,11 +13,12 @@ import re
 
 
 PUBLIC_FILES = (
-    'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md', '.gitignore', '.gitattributes',
+    'README.md', 'README.zh-CN.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md', '.gitignore', '.gitattributes',
     'requirements.txt', 'run.ps1', '.github/workflows/offline-tests.yml',
     'config/host.example.json', 'config/dsview.example.json',
     'target/README.md', 'target/config.example.json',
     'docs/setup.md', 'docs/workflow.md', 'docs/dsview.md', 'docs/queue.md',
+    'docs/queue.zh-CN.md', 'docs/zentimings-mod.md',
     'docs/bios-calibration.md', 'docs/agent-workflow.md', 'docs/publishing.md',
     'profiles/b850m_f12d.json', 'profiles/b850m_f12d_vddp_5mv.json',
 )

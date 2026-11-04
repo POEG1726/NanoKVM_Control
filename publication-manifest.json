@@ -24,13 +24,18 @@
     },
     {
       "name": "README.md",
-      "size": 9111,
-      "sha256": "4e25efa999f66452a11157310e384e9668f84ef79dc83acf9fd5915b91993845"
+      "size": 11735,
+      "sha256": "011e53c11a4493c7914f06a7db4f37c46c750bf844a15993a6a66d93df824353"
+    },
+    {
+      "name": "README.zh-CN.md",
+      "size": 10924,
+      "sha256": "963974ae7c5c3e5951401c6adbb471c8cd61795f5a891e56bf7aa8a0896b4076"
     },
     {
       "name": "THIRD_PARTY_NOTICES.md",
-      "size": 1279,
-      "sha256": "ad17df7e2bb8ac22cfa2f26bb8ef0126c3c43c34dd4bd8d2a40379abfd1d2291"
+      "size": 1355,
+      "sha256": "fad717f1ca3f6b96b44a891f5938bff3b4905c12eaac5556bec430201b2e2570"
     },
     {
       "name": "config/dsview.example.json",
@@ -39,8 +44,8 @@
     },
     {
       "name": "config/host.example.json",
-      "size": 608,
-      "sha256": "9d7aeaf99cf8e0205afb9f8530640d7e7ddf3dfb92529791d795a2852e1733fe"
+      "size": 671,
+      "sha256": "0bc2971640d14b2744e45309364804bee9257cb9b4c69a9b2e6bfa54d215c096"
     },
     {
       "name": "docs/agent-workflow.md",
@@ -64,18 +69,28 @@
     },
     {
       "name": "docs/queue.md",
-      "size": 2028,
-      "sha256": "529f658fec4b5f5fee6629f0b2265753a12bedfd21dfa9e7d0a32a82c04d0640"
+      "size": 4274,
+      "sha256": "658ca547798f9cd6d877cc6054b8fd1ba265c749979403c561dff06b05cd48ed"
+    },
+    {
+      "name": "docs/queue.zh-CN.md",
+      "size": 3122,
+      "sha256": "e9000fd46c3f74d43c4fbc3695a086302daca1f961400a8dd0a69845d2dc8e89"
     },
     {
       "name": "docs/setup.md",
-      "size": 9087,
-      "sha256": "5f305d845c34b5561d7696ba4137913eb7034dadb5ccd7c3c6c85836cd7b4d34"
+      "size": 9261,
+      "sha256": "f8dda080b190eae3c98b13ec8bb97a9bd6ce258ba26bd30b8f3b5e5c44a7d637"
     },
     {
       "name": "docs/workflow.md",
       "size": 5410,
       "sha256": "cbe226971d3fd3dc09065df58b707310f5ffbe913c7adf117453f4cf06ccd116"
+    },
+    {
+      "name": "docs/zentimings-mod.md",
+      "size": 2348,
+      "sha256": "e8aea57f9d6e8d0de7d2f78f791562d7e2ad374a7ae1d597eeb1e090d5a7010b"
     },
     {
       "name": "nanokvm_flow/__init__.py",
@@ -329,8 +344,8 @@
     },
     {
       "name": "tools/prepare_github.py",
-      "size": 4737,
-      "sha256": "664f8570ebd92de36e8bd86782042e5355907793b4898620996d23042d1ecaea"
+      "size": 4809,
+      "sha256": "1e0fd26f4b9a0bd0c38633da39e3e5667bf053e8bdcb724c9a43c618fa58ed4b"
     }
   ]
 }

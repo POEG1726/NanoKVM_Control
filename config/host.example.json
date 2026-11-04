@@ -9,6 +9,13 @@
   "telemetry_db": "D:/Telemetry/data/hwtrace.sqlite3",
   "vddp_tolerance_v": 0.02,
   "post_total_timeout_seconds": null,
-  "notifications": {"enabled": false, "codex_executable": "codex", "retry_seconds": 30, "timeout_seconds": 20},
+  "notifications": {
+    "enabled": false,
+    "thread_id": "",
+    "codex_executable": "codex",
+    "retry_seconds": 30,
+    "timeout_seconds": 20,
+    "dry_run": false
+  },
   "bios_entry_auto_apply": false
 }

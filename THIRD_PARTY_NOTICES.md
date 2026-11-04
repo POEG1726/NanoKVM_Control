@@ -13,7 +13,8 @@ drivers, firmware, builds and their licenses are not bundled or relicensed here.
 - [HWiNFO](https://www.hwinfo.com/download/),
   [y-cruncher](https://www.numberworld.org/y-cruncher/), AMI AFU, TM5, NanoKVM
   firmware and any drivers remain subject to their own distribution/license terms.
-- [ZenTimings](https://github.com/irusanov/ZenTimings), ZenStates-Core,
+- [ZenTimings-Mod](https://github.com/POEG1726/ZenTimings-Mod), forked from
+  [ZenTimings](https://github.com/irusanov/ZenTimings), ZenStates-Core,
   inpoutx64 and the external custom export bundle must retain their applicable
   upstream licenses and notices. No export bundle or driver is distributed here.
 

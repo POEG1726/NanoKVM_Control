@@ -1,23 +1,34 @@
-# Agent checkpoint queue
+# Codex checkpoint queue
 
-后台脚本观察硬件/测试进度；仅在 F10 待审核、明确 Boot Failure、采集/控制异常、测试完成等检查点发送去重通知。普通 BIOS entry 在已校准 auto-apply 模式直接继续到 F10，不逐帧唤醒 Agent。
+[English](queue.md) | [简体中文](queue.zh-CN.md)
 
-此 adapter 使用安装环境提供的命令形状：
+The worker waits for boot/capture/test progress in the background. At meaningful
+checkpoints it queues a short message to the existing reviewing Codex chat:
+F10 review, explicit Boot Failure, capture/control exceptions or test completion.
+Ordinary calibrated auto-apply entry continues to F10 without a separate entry
+notification. This avoids keeping an agent turn open for hardware polling.
+
+The [official Codex CLI reference](https://learn.chatgpt.com/docs/cli/reference)
+documents `codex queue` for an existing session. This repository uses:
 
 ```text
-codex queue --thread EXISTING_THREAD_UUID --message CHECKPOINT_METADATA
+codex queue --thread SESSION_UUID --message CHECKPOINT_METADATA
 ```
 
-该命令依赖本机 CLI 构建。启用前自行查看 `codex queue --help`，不能假定任意标准 CLI 都有这个子命令。不可用时关闭通知并人工检查状态；不开新会话、不猜测 last thread。CLI 退出零只表示 queued，不表示 Agent 已读取、审批或完成。
+The official CLI can accept an exact session name; this adapter intentionally
+requires an explicit UUID. It does not pass `--resume`, select `--last`, create a
+chat or guess a destination. Queue acceptance is not proof of delivery/handling
+and never approves a BIOS change. Keep the intended reviewing chat available.
 
-## 配置
+## Fill in your own session ID
 
-在未提交的 `config/host.json` 中配置：
+Copy `config/host.example.json` to `config/host.json`. Edit the **local** file:
 
 ```json
 {
   "notifications": {
     "enabled": false,
+    "thread_id": "",
     "codex_executable": "codex",
     "retry_seconds": 30,
     "timeout_seconds": 20,
@@ -26,18 +37,57 @@ codex queue --thread EXISTING_THREAD_UUID --message CHECKPOINT_METADATA
 }
 ```
 
-确认本机能力后再开启 enabled，并设置真实 `thread_id` UUID，或通过 `CODEX_THREAD_ID` 明确指定。缺省 disabled；PATH 不包含该 CLI 时把 `codex_executable` 改成完整本机路径。不要把开发者的用户路径/会话 ID 复制给另一台机器。
+1. Choose the Codex chat that will inspect this experiment's screenshots/results.
+2. Obtain that chat's actual UUID from the client, or from `CODEX_THREAD_ID` in a
+   shell launched by that chat when the environment variable is provided. Do not
+   use an unrelated terminal's value or infer it from the title.
+3. Paste the UUID into the empty `notifications.thread_id` string. Use a chat UUID,
+   not a PID, NanoKVM ID, API key, title or the literal `SESSION_UUID` placeholder.
+4. Run `codex queue --help` and confirm the executable/login environment is the
+   intended local installation. Use an absolute `codex_executable` path if needed.
+5. Set `enabled` to `true` after configuration. Leave it false for manual review
+   without notification delivery. Do not commit your local configuration.
 
-## Outbox 与证据
+Alternatively, leave `thread_id` empty and explicitly set the runner process's
+`CODEX_THREAD_ID`. A nonempty config value takes precedence. The runner validates
+UUID syntax but cannot prove that a UUID is the right reviewing chat.
 
-每条通知写到 `RUN/notifications/EVENT_HASH.json`，起始 pending；只有命令成功才改 queued。失败保留记录，worker 可 drain/retry。相同事件/证据去重，截图或状态改变才产生新 event。锁避免并发发送重复通知。
+|Setting|Meaning|
+|---|---|
+|`enabled`|Delivery opt-in; false by default|
+|`thread_id`|Your reviewing chat UUID; blank template, with environment fallback|
+|`codex_executable`|Local CLI command or absolute executable path|
+|`retry_seconds`|Minimum delay before retrying a pending notification|
+|`timeout_seconds`|Timeout for each CLI invocation|
+|`dry_run`|Build a preview without invoking the CLI; not a delivery test|
+
+No new OpenAI API key or API client is used by this adapter. It relies on the
+CLI's existing login and local session availability. A newer reference page is
+not a guarantee that an older installed binary has the same command/options.
+
+## Outbox, retries and dry-run
+
+Records live in `RUN/notifications/EVENT_HASH.json`. They start pending; CLI
+success changes them to queued. Failures stay pending for worker drain/retry.
+Matching event/evidence is deduplicated; a meaningful evidence change creates a
+new event. File locks prevent simultaneous duplicate sends.
+
+For an existing local `run` and configured `config`, the Python API supports:
 
 ```python
 from nanokvm_flow.notify import Notifier
 notifier = Notifier(config)
-preview = notifier.notify(run, "f10_review", "完整 F10 清单待审", dry_run=True)
+preview = notifier.notify(run, "f10_review", "Review the complete F10 list", dry_run=True)
 pending = notifier.outbox(run)
 results = notifier.drain(run)
 ```
 
-只排队检查点 metadata，原图/raw artifact 保留 run。敏感字段和认证相关文本过滤；仍不得把凭据作为 summary/evidence 输入。outbox 成功不能放行 F10，只有本次请求/profile/图片绑定的独立审批才能让 `save` 消费一次确认。
+Delivery must be enabled to obtain the dry-run payload; otherwise the result is
+disabled. Dry-run does not send, validate the destination's existence or mark a
+record queued. `drain` performs real delivery for enabled pending notifications.
+
+Only checkpoint metadata is sent; original screenshots and raw files remain in
+the run folder. Sensitive-field filtering is a last defense, not permission to
+supply credentials in summaries/evidence. Successful queueing does not release
+F10. An agent must inspect all pages and produce the request/profile/image-hash
+bound decision before `save` can consume confirmation once.

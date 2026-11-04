@@ -1,47 +1,63 @@
 # NanoKVM Control
 
-用原生 NanoKVM MCP、SSH 和确定脚本组织 DDR5 BIOS 调参实验：进入 BIOS、停在 F10 审核、回收开机证据、核对读回与遥测，然后执行压力测试。Agent 检查画面和例外；脚本负责固定键序、等待、传输与记录。没有 memtune-gateway。
+English (default) | [简体中文](README.zh-CN.md)
 
-当前实现针对 **Ryzen 9 9950X3D / Gigabyte B850M AORUS ELITE WIFI6E ICE / F12d / 4×32GiB DDR5**。BIOS 路径、32MiB dump 和请求解析均与该平台有关，不能直接用作通用主板配置。
+Scripted DDR5 tuning experiments using **native NanoKVM MCP and SSH**: enter
+BIOS, pause for F10 review, collect boot evidence, verify saved requests and
+telemetry, then launch stress tests. Deterministic scripts handle keys, waiting,
+transfers and records; an agent reviews screenshots and handles exceptions.
+There is no memtune-gateway.
 
-## 框架
+The current implementation targets **Ryzen 9 9950X3D / Gigabyte B850M AORUS ELITE
+WIFI6E ICE / F12d / 4×32GiB DDR5**. BIOS navigation, 32MiB dumps and request parsing
+are platform-specific. Historical calibration is not authorization to operate a
+new target.
+
+## Architecture
 
 ```mermaid
 flowchart LR
-    A[Agent 审核] <-->|截图 / F10 请求 / 结果| H[分析机 Python runner]
-    H -->|原生 MCP: 截图与 USB HID| K[NanoKVM]
-    K --> B[目标机 BIOS]
-    H <-->|SSH / SCP| T[Windows 登录采集与测试]
-    T --> E[AFU 只读 dump + ZenTimings JSON]
-    T --> W[HWiNFO → HWTrace → 接收端 SQLite]
-    T --> Y[y-cruncher VT3 / 可选 TM5]
-    H -->|CLI / IPC 开始与停止| D[DSView-Mod]
-    L[逻辑分析仪: eSPI] --> D
+    A[Agent review] <-->|Screenshots / F10 / results| H[Host Python runner]
+    H -->|Native MCP: screenshots and USB HID| K[NanoKVM]
+    K --> B[Target BIOS]
+    H <-->|SSH / SCP| T[Windows capture and tests]
+    T --> E[Read-only AFU dump + ZenTimings JSON]
+    T --> W[HWiNFO → HWTrace → receiver SQLite]
+    T --> Y[y-cruncher VT3 / optional TM5]
+    H -->|CLI / IPC start and stop| D[DSView-Mod]
+    L[Logic analyzer: eSPI] --> D
 ```
 
-DSView 只采样、解码和保存，采样异常独立报告，不作为开机/测试门槛。开机时间为 F10 确认发送至首次恢复的有效 HDMI 图像，信号丢失/恢复及观测上下界保留，Windows 桌面就绪另计。
+DSView samples, decodes and saves only. Capture errors are reported separately;
+they do not gate boot or determine test results. Boot timing runs from F10
+confirmation send to the first restored valid HDMI image, retaining signal
+loss/restoration observations and bounds. Windows desktop readiness is separate.
 
 ## Prerequisites
 
-|位置|依赖|本项目需要的能力|
+|Location|Dependency|Required capability|
 |---|---|---|
-|分析机|Windows、PowerShell 7、Python 3.12+、Git、OpenSSH Client|`pwsh`、`ssh`、`scp` 可执行；Python 依赖见 `requirements.txt`|
-|分析机|NanoKVM，HDMI 与 USB HID 接目标机|启用[原生 MCP](https://wiki.sipeed.com/hardware/en/kvm/NanoKVM_PCIe/mcp.html)，提供 `cube_screenshot`、`cube_press_keys`、`cube_type_text`，使用 Endpoint/API Key|
-|分析机|DSLogic 等兼容逻辑分析仪、经核对的 eSPI 接线|与 DSView Stream 模式、50MHz 和实际总线电平兼容；频道名/接线须人工校准|
-|分析机|[DSView-Mod（我的 DSView 项目）](https://github.com/POEG1726/DSView)|必须使用实现 `--capture-start/stop/status` CLI/IPC 的构建；任意旧 release 未必具备该接口|
-|分析机 / 接收端|[HWTrace（我的遥测项目）](https://github.com/POEG1726/HWTrace)|配置接收端和 SQLite；runner 只读该库并检查新 collector 的真实 sample|
-|目标机|Windows x64、PowerShell 7、Python 3.13、OpenSSH Server|SSH key 非交互登录；管理员权限、交互桌面和计划任务；无人值守需自行配置登录|
-|目标机|[HWiNFO64](https://www.hwinfo.com/download/)|Sensors 模式和有效 `Global\HWiNFO_SENS_SM2`；复用已配置的 Windows 自启实例|
-|目标机|HWTrace collector、filter、已有 `collector.json`|沿用 HWTrace 安装与认证配置；监控进程覆盖所选 y-cruncher 子进程/TM5|
-|目标机|ZenTimings **定制 headless CLI**|`ZenTimings.Export.exe --export-json FILE --exit`，导出完整 JSON；普通 GUI 版不能替代|
-|目标机|适用于该平台的既有 AMI AFU|仅 `/O` 导出唯一文件；不附带二进制，不使用刷写/恢复参数|
-|目标机|[y-cruncher](https://www.numberworld.org/y-cruncher/)|当前配置沿用 0.8.7；VT3 默认 116GiB、10 次独立启动、每次最多 600s|
-|分析机|F12d 精确 saved-request 离线解析器及其依赖|5mV 相邻点必须核对 dump 请求值；20mV 容差的 SMU 报告不足以区分|
-|可选|TM5 / Agent checkpoint queue CLI|TM5 沿用已配置 profile；通知可关闭，开启须有支持该命令的本机 CLI 与明确会话 ID|
+|Host|Windows, PowerShell 7, Python 3.12+, Git, OpenSSH Client|`pwsh`, `ssh`, `scp`; Python packages from `requirements.txt`|
+|Host / target connection|NanoKVM with target HDMI and USB HID|[Native MCP](https://wiki.sipeed.com/hardware/en/kvm/NanoKVM_PCIe/mcp.html): `cube_screenshot`, `cube_press_keys`, `cube_type_text`, Endpoint/API Key|
+|Host|Compatible DSLogic/logic analyzer and calibrated eSPI wiring|Stream/Loop at 50MHz, suitable bus voltage and verified CS/CLK/IO mapping|
+|Host|[DSView-Mod — our DSView project](https://github.com/POEG1726/DSView)|A build implementing `--capture-start/stop/status` CLI/IPC; older releases may lack it|
+|Host / receiver|[HWTrace — our telemetry project](https://github.com/POEG1726/HWTrace)|Configured receiver and locally readable SQLite; actual samples from the new collector|
+|Target|Windows x64, PowerShell 7, Python 3.13, OpenSSH Server|Noninteractive SSH key login, administrator privileges, interactive desktop and scheduled tasks; unattended login prepared separately|
+|Target|[HWiNFO64](https://www.hwinfo.com/download/)|Sensors mode and valid `Global\HWiNFO_SENS_SM2`; reuse the existing Windows autostart instance|
+|Target|HWTrace collector, filter and existing `collector.json`|Receiver authentication and a process list covering the actual y-cruncher worker/TM5|
+|Target|[ZenTimings-Mod — our fork](https://github.com/POEG1726/ZenTimings-Mod)|[Headless release](https://github.com/POEG1726/ZenTimings-Mod/releases/latest): one-shot full JSON export; the ordinary GUI executable is not a substitute|
+|Target|Existing platform-compatible AMI AFU|`/O` only, to a unique dump; no flashing or restore arguments|
+|Target|[y-cruncher](https://www.numberworld.org/y-cruncher/)|Current profile uses 0.8.7, VT3, 116GiB, ten independent launches of at most 600s|
+|Host|F12d exact saved-request parser and dependencies|Required for neighboring 5mV settings; an SMU reading with 20mV tolerance cannot identify them|
+|Optional|TM5 / Codex CLI checkpoint notifications|Existing TM5 profile; a CLI supporting `codex queue` and an explicitly chosen chat UUID|
 
-本仓库提供编排源码和配置示例，不分发上述软件、驱动、许可证、密钥或实验原始数据。部署与定制组件要求见 [setup](docs/setup.md)，DSView 接口见 [capture](docs/dsview.md)。
+This repository provides orchestration source and example configuration. It does
+not distribute third-party tools/drivers, keys or experiment data. See the
+[deployment guide (Chinese)](docs/setup.md),
+[DSView notes (Chinese)](docs/dsview.md) and
+[ZenTimings-Mod integration](docs/zentimings-mod.md).
 
-## 安装与配置
+## Install and configure
 
 ```powershell
 py -3.13 -m venv .venv
@@ -52,59 +68,139 @@ Copy-Item config/dsview.example.json config/dsview.json
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-编辑本地配置中的设备地址、SSH 别名、程序路径、输出目录和接收端数据库路径，并按 [setup](docs/setup.md) 准备目标配置。示例默认关闭通知和 BIOS entry auto-apply。`run.ps1` 优先使用 `NANOKVM_PYTHON`，其次项目 `.venv`，最后 PATH 中的 Python，不依赖旧工作树。
+Edit the local files for device address, SSH alias, tool/Python paths, output
+folders and receiver database. Prepare `target/config.example.json` for the
+intended target before first deployment. Notification delivery and BIOS-entry
+auto-apply are disabled in the example. `run.ps1` uses `NANOKVM_PYTHON` if supplied,
+otherwise the project `.venv`, then Python on PATH.
 
-NanoKVM Key 通过当前进程环境 `NANOKVM_API_KEY` 或本地 `connection_provider` 提供。SSH 使用现有 agent/身份配置；密码、私钥和 receiver SSH 命令不写入本仓库或 run 产物。`config/host.json`、`config/dsview.json`、`runs/` 和本地扫描队列已忽略。
+Provide the NanoKVM key through the process environment `NANOKVM_API_KEY`, or an
+untracked `connection_provider` that returns `(url, key)`. SSH uses your existing
+agent/identity configuration. Use verified host fingerprints and `BatchMode=yes`
+key login; never put passwords, private keys or receiver SSH commands in source
+or run artifacts. Local host/DSView config, run data and scan queues are ignored.
 
-## 运行流程
+### ZenTimings-Mod bundle
 
-以下是**控制命令示例，会操作真实目标机**；先完成授权、BIOS 校准与[部署检查](docs/setup.md)。profile 的 slot 是候选数组下标，与 BIOS 的 Profile1–8 存档槽无关。下面使用 5mV profile 的 slot20，即 1.000V，不会自动执行整张扫描队列。
+Download and checksum the `windows-x64-headless.zip` from
+[our release](https://github.com/POEG1726/ZenTimings-Mod/releases/latest).
+Extract to `external/zentimings-headless` and keep the four runtime files plus
+`build-manifest.json` at that directory's top level. Set `zentimings_cli_bundle`
+in `config/host.json` accordingly. Deployment verifies and uploads the bundle to
+a separate versioned target folder, leaving the GUI installation intact.
+See [integration details](docs/zentimings-mod.md).
+
+### Codex queue and your session ID
+
+The background runner queues checkpoints into an **existing Codex chat** when
+F10 review is required, a test finishes, or an exception needs attention. The
+agent can finish its turn while scripts wait for hardware. A queued notification
+is not proof it was read and never approves F10.
+
+The place to enter your session ID is **`notifications.thread_id` in your local
+`config/host.json`**. The example deliberately leaves it blank:
+
+```json
+{
+  "notifications": {
+    "enabled": false,
+    "thread_id": "",
+    "codex_executable": "codex",
+    "retry_seconds": 30,
+    "timeout_seconds": 20,
+    "dry_run": false
+  }
+}
+```
+
+Replace the empty string with the reviewing chat's actual session/thread **UUID**,
+then set `enabled` to `true`. Alternatively leave it empty and explicitly provide
+`CODEX_THREAD_ID` in the runner's process environment; a nonempty config value
+takes precedence. Use a chat UUID, not a PID, NanoKVM identifier, API key or title.
+
+Check `codex queue --help` and your local CLI login before enabling notifications.
+The adapter invokes `codex queue --thread UUID --message TEXT`, requires a UUID,
+and does not select `--last`, create a chat or automatically resume one. Keep the
+reviewing chat available. Full setup, dry-run and outbox behavior:
+[English](docs/queue.md) / [中文](docs/queue.zh-CN.md).
+
+## Run an experiment
+
+These commands **operate real hardware**. Complete authorization, actual BIOS
+calibration and deployment first. A profile's `slot` indexes its candidate array;
+it is unrelated to the BIOS Profile1–8 save slots. This example selects slot20,
+1.000V in the 5mV profile; it does not execute an entire scan queue.
 
 ```powershell
 .\run.ps1 init --run example1000 --profile profiles/b850m_f12d_vddp_5mv.json --slot 20
 .\run.ps1 deploy --run example1000
 .\run.ps1 arm --run example1000
 .\run.ps1 enter --run example1000
-# 看新图确认已校准的 Advanced / Tweaker 根页
-.\run.ps1 anchor --run example1000 --image-sha256 <当前截图SHA256>
+# Inspect the new image: it must be the calibrated Advanced / Tweaker root.
+.\run.ps1 anchor --run example1000 --image-sha256 <CURRENT_IMAGE_SHA256>
 .\run.ps1 apply --run example1000
-# 此时停在 F10；审核完整清单和 Profile8 保存证据，写 review_decision.json
+# Pause at F10. Review every change and Profile8 evidence; write a bound decision.
 .\run.ps1 review --run example1000 --decision runs/example1000/review_decision.json
 .\run.ps1 save --run example1000
 .\run.ps1 monitor --run example1000 --kind vt3 --background
 ```
 
-`deploy` 上传脚本和验证后的 ZenTimings bundle，保留并更新已有目标配置，安装登录任务（不存在时）并写 pending run；本身不重启或开测。`enter` 发送 Delete 并观察画面，本身不发起重启。授权后可通过 `python -m nanokvm_flow.boot_entry --config config/host.json --run RUN --firmware-ui` 从 Windows 请求一次重启进入 BIOS，不自动重试。该入口在重启前请求 DSView 开始，按 `bios_entry_auto_apply` 可在确认真实根页后继续至 F10。详见 [workflow](docs/workflow.md)。
+`deploy` uploads scripts and the verified ZenTimings bundle, preserves/updates
+existing target configuration, installs a missing logon task and writes the
+pending run. It does not reboot or start a test. `enter` sends Delete and observes
+video; it does not initiate a reboot. With explicit authorization, use
+`python -m nanokvm_flow.boot_entry --config config/host.json --run RUN --firmware-ui`
+to request one Windows firmware-UI reboot, with no retry. This entry requests
+DSView start before reboot; configured auto-apply continues only from the actual
+calibrated root and still pauses at F10.
 
-Windows 桌面确认后，外部 runner 停止并排空 DSView。目标采集检查 HWiNFO，单次导出 ZenTimings，执行 AFU `/O`，启动 HWTrace；分析机先接收/hash 校验 dump/JSON，核对精确请求和新遥测，再回传 manifest 绑定回执，才请求压力测试。十份日志和汇总接收并校验后通知 Agent。算法错误仍继续其余独立启动；短测无错误不等同长期稳定。
+After this run's interactive desktop is confirmed, the external runner stops
+and drains DSView. Target capture checks HWiNFO, exports one ZenTimings JSON,
+runs AFU `/O` and starts HWTrace. The host receives/hash-verifies the originals,
+checks exact requests and fresh receiver samples, then uploads a manifest-bound
+receipt before requesting tests. Ten logs and summaries must be received and
+verified before completion notification. Algorithm errors do not silently end
+the remaining independent launches. A short error-free run does not prove
+long-term stability.
 
-## 目录与脚本
+## Source map
 
-|路径|用途|
+|Path|Role|
 |---|---|
-|`run.ps1` / `nanokvm_flow/__main__.py`|CLI、初始化、截图、锚点、审核、部署和回收|
-|`nanokvm_flow/boot_entry.py`|单次重启进入 BIOS、Delete 循环/固件 UI 入口、识别和例外|
-|`nanokvm_flow/bios.py` / `workflow.py` / `state.py`|固定宏、SHA 绑定审核、持久化 run ledger|
-|`nanokvm_flow/host.py` / `transfers.py`|SSH/SCP、读回、遥测、回执和测试产物校验|
-|`nanokvm_flow/worker.py` / `hdmi_watch.py`|后台等待桌面/测试，独立 HDMI 观测|
-|`nanokvm_flow/dsview.py` / `notify.py`|CLI/IPC adapter，去重与重试 outbox|
-|`target/`|登录任务、采集、交互会话测试、结果解析；见 [target README](target/README.md)|
-|`profiles/`|B850M F12d 校准与候选；历史粗扫保留，不代表当前授权范围|
-|`scripts/read-image-text.ps1`|本机 WinRT OCR，需要 Windows OCR 语言组件|
-|`tools/deploy_hwtrace_probes.py`|可选文件部署，只更新下次 collector 使用的 binary/filter，不停止当前负载|
-|`tools/prepare_github.py`|白名单导出发布源码和 SHA256 清单，排除本地配置/实验/旧历史|
-|`tests/`|离线 fake/mock 验证，不连接硬件|
+|`run.ps1` / `nanokvm_flow/__main__.py`|CLI, run creation, screenshots, anchors, review, deployment and collection|
+|`nanokvm_flow/boot_entry.py`|One reboot into BIOS, Delete/firmware-UI entry, classification and exceptions|
+|`bios.py` / `workflow.py` / `state.py` in `nanokvm_flow/`|Fixed macros, hash-bound review and durable run ledger|
+|`host.py` / `transfers.py` in `nanokvm_flow/`|SSH/SCP, readback, telemetry, receipts and artifact verification|
+|`worker.py` / `hdmi_watch.py` in `nanokvm_flow/`|Background progress and independent HDMI observations|
+|`dsview.py` / `notify.py` in `nanokvm_flow/`|Capture CLI/IPC and deduplicated notification outbox|
+|`target/`|Logon capture, interactive-session tests and result parsing|
+|`profiles/`|B850M F12d calibration and candidates; historical values do not extend current authorization|
+|`scripts/read-image-text.ps1`|Host WinRT OCR; Windows OCR language components required|
+|`tools/deploy_hwtrace_probes.py`|Optional file-only update for the next collector start; preserves active workloads|
+|`tools/prepare_github.py`|Allowlisted public snapshot and checksums without private runtime data/history|
+|`tests/`|Offline fake/mock verification; no hardware connection|
 
-## 操作边界与验证
+## Operating boundaries and verification
 
-- Delete 目标间隔 250ms，容忍 POST 暂态 HID 故障；没有 POST 总超时，黑屏不自动复位。
-- 只有实际图像确认的校准根页才能运行宏；未知画面、Boot Failure、进入 Windows 等例外交给 Agent。
-- F10 停在确认前，检查所有页面且变更恰好匹配；审核绑定请求/profile/图片 SHA，确认只消费一次。
-- Profile8 普通覆盖保留现有 `agent-tune` 名称，并保存 Profile Saved 和槽名证据；首次命名/修复另行审核。
-- 在 `runs/RUN/STOP` 写文件可停止本地后台循环，不会自动关测试或重启，已发出的动作无法撤回。
+- Delete targets a 250ms interval and tolerates transient POST HID failures.
+  There is no total POST timeout or automatic reset on black video.
+- Macros require an actual calibrated root image. Unknown screens, Boot Failure
+  and missed BIOS entry pause for agent inspection.
+- F10 pauses before confirmation. Every page must match exactly; request, profile
+  and image hashes bind the decision, which is consumed once.
+- Routine Profile8 overwrite preserves its existing `agent-tune` name and retains
+  Profile Saved/slot-name evidence. Initialization or name repair is separate.
+- A `runs/RUN/STOP` file stops supporting local loops; it does not terminate target
+  tests, reboot or undo keys already sent.
 
-验证命令：`python -m unittest discover -s tests -v` 和 `python -m compileall -q nanokvm_flow target tools`。本次整理仅做离线检查；只读连通性、BIOS 校准、物理采集、完整实验分别需要证据。公开包不附带历史校准原图，也不向新设备授予执行许可。
+Offline checks: `python -m unittest discover -s tests -v` and
+`python -m compileall -q nanokvm_flow target tools`. Connectivity, live calibration,
+physical capture and end-to-end experiments require their own evidence. The
+published source does not include the original calibration screenshots.
 
-BIOS 校准要点见 [calibration](docs/bios-calibration.md)，Agent 操作约定见 [agent workflow](docs/agent-workflow.md)。
+Additional guides, currently in Chinese: [workflow](docs/workflow.md),
+[BIOS calibration](docs/bios-calibration.md), [target pipeline](target/README.md),
+[agent rules](docs/agent-workflow.md) and [publication](docs/publishing.md).
 
-本项目采用 [MIT License](LICENSE)；外部依赖见 [third-party notices](THIRD_PARTY_NOTICES.md)。GitHub 发布见 [publishing](docs/publishing.md)：从白名单导出目录建立独立初始提交，避免推送含旧研究资料的开发分支。
+[MIT License](LICENSE). External components retain their own licenses; see
+[third-party notices](THIRD_PARTY_NOTICES.md).
