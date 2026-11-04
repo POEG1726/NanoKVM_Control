@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "output_root": "D:/OCBootCapture/runs",
+  "login_delay_seconds": 10,
+  "trace_start_wait_seconds": 3,
+  "identity": {
+    "cpu_contains": "9950X3D",
+    "board": "B850M AORUS ELITE WIFI6E ICE"
+  },
+  "afu": "D:/Tools/AFU/AFUWINx64.exe",
+  "zentimings_cli": {
+    "executable": "D:/OCBootCapture/ZenTimingsCLI/ZenTimings.Export.exe",
+    "timeout_seconds": 180
+  },
+  "hwinfo": "C:/Program Files/HWiNFO64/HWiNFO64.EXE",
+  "hwinfo_process_names": [
+    "HWiNFO64.exe",
+    "HWiNFO32.exe",
+    "HWiNFO.exe"
+  ],
+  "hwinfo_ready_timeout_seconds": 60,
+  "hwinfo_poll_seconds": 0.5,
+  "hwtrace_root": "D:/Tools/HWTrace",
+  "test_processes": [
+    "TM5.exe",
+    "y-cruncher.exe",
+    "24-ZN5 ~ Komari.exe"
+  ],
+  "tests": {
+    "vt3": {
+      "executable": "D:/Tools/y-cruncher/y-cruncher.exe",
+      "working_directory": "D:/Tools/y-cruncher",
+      "arguments": [
+        "pause:-2",
+        "logfile:{log}",
+        "stress",
+        "-M:116G",
+        "-D:600",
+        "-TL:600",
+        "VT3"
+      ],
+      "monitored_processes": [
+        "y-cruncher.exe",
+        "24-ZN5 ~ Komari.exe"
+      ],
+      "repeats": 10,
+      "expected_count": 10,
+      "gap_seconds": 15
+    },
+    "tm5": {
+      "executable": "D:/Tools/TM5/TM5.exe",
+      "working_directory": "D:/Tools/TM5",
+      "arguments": [],
+      "monitored_processes": [
+        "TM5.exe"
+      ],
+      "repeats": 1
+    }
+  }
+}

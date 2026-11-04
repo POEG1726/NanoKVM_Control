@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "id": "gigabyte-b850m-aorus-elite-wifi6e-ice-f12d-vddp",
+  "target": "9950X3D / B850M AORUS ELITE WIFI6E ICE / 4x32GiB",
+  "firmware": "F12d",
+  "entry": {
+    "key": "Delete",
+    "interval_ms": 250,
+    "total_timeout_s": null,
+    "stop_condition": "Agent-confirmed BIOS Setup screen, never HDMI presence alone"
+  },
+  "voltage_slots_mv": [
+    900,
+    950,
+    1000,
+    1050,
+    1100
+  ],
+  "route": {
+    "page": "Tweaker",
+    "parameter": "cldo_vddp_mv",
+    "bios_label": "VDDP Voltage",
+    "start_anchor": {
+      "id": "from_tweaker_voltage_anchor",
+      "selected_parameter": null,
+      "description": "Advanced mode / Tweaker root page, any currently selected row. Agent confirms this root-page anchor; the macro uses End to reanchor at CPU/VRM Settings before ArrowUp to Advanced Voltage Settings."
+    },
+    "navigation_actions": [
+      {
+        "op": "key",
+        "keys": [
+          "End"
+        ],
+        "count": 1
+      },
+      {
+        "op": "key",
+        "keys": [
+          "ArrowUp"
+        ],
+        "count": 1
+      },
+      {
+        "op": "key",
+        "keys": [
+          "Enter"
+        ],
+        "count": 1
+      },
+      {
+        "op": "key",
+        "keys": [
+          "Home"
+        ],
+        "count": 1
+      }
+    ],
+    "open_field_actions": [],
+    "selector": {
+      "mode": "numeric",
+      "unit": "V",
+      "clear_actions": [],
+      "entry_replaces_current": true,
+      "notes": "Live MCP calibration: type 0.900 directly on the selected VDDP main row, then Enter. Do not press Enter first (it opens the dropdown), and do not send Ctrl+A. Repeated direct typing was verified to replace rather than append."
+    }
+  },
+  "calibration": {
+    "verified": true,
+    "scope": "Measured keyboard route and direct numeric V entry. F10 change-list review, saved-request verification and effective VDDP readback remain mandatory per run.",
+    "evidence": [
+      {
+        "path": "runs/bios-calibration-20261103/000_bios_default.jpg",
+        "sha256": "1c64d378166c0a80226412c9eba4a66db505d102b48ba8e5a1cc9f40949bb177",
+        "utc": "2026-11-04T04:44:32.206076+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/001_calibration.jpg",
+        "sha256": "57acc9899e78510e95eec13cd83d140f4a5807d3f4689ceede8394df9a874c0d",
+        "utc": "2026-11-04T04:44:43.010911+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/002_calibration.jpg",
+        "sha256": "b63ed45560941d7d5fbf0c5b061991f9b07a41e37b2c492fa7b281c2ccefe77b",
+        "utc": "2026-11-04T04:44:52.673504+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/003_calibration.jpg",
+        "sha256": "6bfeeebe5d5ad8af8cf86b7ee23752eec83378c5def10c1fe060cfa830b08f63",
+        "utc": "2026-11-04T04:44:54.518528+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/004_calibration.jpg",
+        "sha256": "a3d799a0803a8a04d710d9c0b44dc3c4b5017fc357aa793bfc75c0dc57d4b9fd",
+        "utc": "2026-11-04T04:45:04.245176+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/005_calibration.jpg",
+        "sha256": "58c5b992e85f8b3fde172cac5f5a640fc67234b0bc87ad3c0733cc1a6618b3de",
+        "utc": "2026-11-04T04:45:22.927607+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/006_calibration.jpg",
+        "sha256": "2b767fc9a217464a1a4070c8b52ec9804cc91dba1cdc26ae23aa80c70ea6b24f",
+        "utc": "2026-11-04T04:45:25.036703+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/007_calibration.jpg",
+        "sha256": "7de9426ef765b51812241b7fccd8032e9848b6e624e9fd894c03748b01e1bbae",
+        "utc": "2026-11-04T04:45:54.493856+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/008_typed_value.jpg",
+        "sha256": "5baf9b51d097e85a5c21ee3a6a242efa2f81e08d81a71fb6da90775892b19127",
+        "utc": "2026-11-04T04:45:56.331533+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/009_calibration.jpg",
+        "sha256": "ebf73b6510273a3701cd3d278a31ecc093dbce61a6bd2332eeb67ba1b8dab5a0",
+        "utc": "2026-11-04T04:46:10.715396+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/010_typed_value.jpg",
+        "sha256": "79cb87c28d55418f008eb728c4eef4371d1cdcbe1526fe36ac183c363603c644",
+        "utc": "2026-11-04T04:46:12.620439+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/011_calibration.jpg",
+        "sha256": "17d9c3bb9207a6b085804c8d3029ed368dfbf529a3bec156d5a064b9554ebc25",
+        "utc": "2026-11-04T04:46:14.472555+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/012_calibration.jpg",
+        "sha256": "a5497de8cc1a903c68d92a89f8143c0d760f57aada919b1ba5cd384eb77e49e6",
+        "utc": "2026-11-04T04:47:26.406499+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/013_calibration.jpg",
+        "sha256": "eb80e00473b088067a5befee32ace74b921951dc9763ea4bae2ac97274dc248d",
+        "utc": "2026-11-04T04:47:28.298033+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/014_calibration.jpg",
+        "sha256": "a6116fe8c38e323abd0f020aba61788f9e9f3102d81171ef70ae1db4a1caa323",
+        "utc": "2026-11-04T04:47:31.171673+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/015_calibration.jpg",
+        "sha256": "ee5c63fbde5e5fd89f5d4135a411e2a9b2f419185fc6e3014b495896ef1b3d74",
+        "utc": "2026-11-04T04:47:32.992651+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/034_save_exit_menu.jpg",
+        "sha256": "453538efc51b58cac3846c49ae8ba89bf839ecfc203eb2e95ec516f8abf9020f",
+        "utc": "2026-11-04T04:53:09.407072+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/038_save_profile_list.jpg",
+        "sha256": "46e9efd28e764ce29e85ba5baa8af34fa114742afd0689d76490baad908a2837",
+        "utc": "2026-11-04T04:53:45.722761+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/042_profile8_name_prompt.jpg",
+        "sha256": "e282b750a2d7335315d82356f5220259361f4d87caf8b1d9ddfb94704ab2aebd",
+        "utc": "2026-11-04T04:55:12.946995+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/046_profile8_saved_check.jpg",
+        "sha256": "59b3d6f2573ac194b363b48317b2eb9108a9fe6b0e90a20add433db0e9c6f438",
+        "utc": "2026-11-04T04:55:49.996250+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/051_profile8_verified.jpg",
+        "sha256": "1a5da73368e95d37c4158a2c2abe33b39fa93246700fe07a55d9adbcc032ed16",
+        "utc": "2026-11-04T04:56:20.128513+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/060_profile8_saved_prompt.jpg",
+        "sha256": "81f2168591b888c30e1ae91dfd994b25d2f6f478ca3b9ae9062f1a0a50a81f7f",
+        "utc": "2026-11-04T05:00:16.328199+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/062_f10_change_list.jpg",
+        "sha256": "596c410332083b8626741dc74d20f708cba66223bc64a7d9d1a7152dca5c596d",
+        "utc": "2026-11-04T05:00:22.735871+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/063_f10_profile8_final.jpg",
+        "sha256": "76b3e90002a11f47fc5a207c082a3dc47ecc33b84c6cef6ad13f980e9a258f7f",
+        "utc": "2026-11-04T05:01:41.448204+00:00"
+      },
+      {
+        "path": "runs/bios-calibration-20261103/061_profile8_saved.jpg",
+        "sha256": "0b7cadd2aae5e54aded5c29aeda17c0f5ff6756d90c386b256fe16e59a260d27",
+        "utc": "2026-11-04T05:00:19.699120+00:00"
+      }
+    ],
+    "measured_steps": [
+      "Tweaker root End selects CPU/VRM Settings; ArrowUp selects Advanced Voltage Settings; Enter opens its submenu.",
+      "Submenu first row is VDDP Voltage; Home explicitly anchors that row.",
+      "Direct cube_type_text 0.900 followed by Enter displays 0.900V; a second identical input also displays 0.900V.",
+      "From Tweaker root Right4 opens Save & Exit; End/Up/Enter opens Save Profiles; list End/Up2 selects Profile8. Profile Saved and Profile8:agent-tune were observed. Existing-slot rename clearing macro has now been executed;061 confirms Profile Saved and062 confirms Profile8:agent-tune.",
+      "Full overwrite of existing Profile8 name by End/Backspace32/type agent-tune/Enter produced Profile Saved and a reopened list showing Profile8:agent-tune; final F10 single change VDDP Auto to0.900V. MCP screenshots can lag one capture, so actual content must be reviewed."
+    ],
+    "alternative_list_not_for_execution": {
+      "verified": false,
+      "first_candidate_900mv_index_measured": 21,
+      "home_selects_auto_measured": true,
+      "first_numeric_option_mv_measured": 800,
+      "step_mv": 5,
+      "derived_option_indices": [
+        21,
+        31,
+        41,
+        51,
+        61
+      ],
+      "notes": "Only index21/0.900V was directly selected. The remaining candidate indices are derived from 5mV steps, not individually measured. Active mode is numeric; these indices are not used."
+    },
+    "remaining_run_checks": [
+      "Inspect complete F10 list and accept only intended VDDP change.",
+      "After Windows boot verify Tweaker request and effective VDDP through dump/readback; do not infer priority from the visible field."
+    ]
+  },
+  "evidence": {
+    "setup_key": "User corrected F12 to Delete in the current conversation; existing bios-navigation skill agrees.",
+    "static_vddp": "F12d static mapping: Tweaker Setup+0x14C u16, 5mV step; historical analysis is external to this source distribution.",
+    "voltage_range": "User authorized CLDO VDDP 0.90-1.10V; these five candidates are an editable initial coarse plan, not a proven optimum or a monotonic binary-search interval.",
+    "live_calibration": "runs/bios-calibration-20261103 screenshots 000-011; source screenshots remain immutable and each SHA is referenced above."
+  },
+  "profile_storage": {
+    "slot": 8,
+    "name": "agent-tune",
+    "overwrite_authorized": true,
+    "save_route_verified": true,
+    "overwrite_existing_name_macro_verified": true,
+    "notes": "User authorizes overwriting only Profile8 named agent-tune. Full existing-name clear/replace/save macro was executed successfully; Profile Saved and Profile8:agent-tune are captured. BootFailure load8 recovery remains a distinct route, not performed by the normal apply macro."
+  },
+  "save_before_f10": true
+}

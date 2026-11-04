@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "history_included": false,
+  "files": [
+    {
+      "name": ".gitattributes",
+      "size": 110,
+      "sha256": "edf1d27457ab2631ec6cac8631a994450a2b6b5365b05b5fcac7fdff57e2a843"
+    },
+    {
+      "name": ".github/workflows/offline-tests.yml",
+      "size": 477,
+      "sha256": "5e8a32d327c69d874d08b068daaee298fbdb8c8b6b94c29e731dd3c944a0796b"
+    },
+    {
+      "name": ".gitignore",
+      "size": 310,
+      "sha256": "dfa31afd220e5203fa066c92353722dbe030ab54772a7101ec09c000188443c9"
+    },
+    {
+      "name": "LICENSE",
+      "size": 1065,
+      "sha256": "c5e268914f6105f9e51b60949032ccbb7f966b312d51aec65e3a021cf97320e4"
+    },
+    {
+      "name": "README.md",
+      "size": 9111,
+      "sha256": "4e25efa999f66452a11157310e384e9668f84ef79dc83acf9fd5915b91993845"
+    },
+    {
+      "name": "THIRD_PARTY_NOTICES.md",
+      "size": 1279,
+      "sha256": "ad17df7e2bb8ac22cfa2f26bb8ef0126c3c43c34dd4bd8d2a40379abfd1d2291"
+    },
+    {
+      "name": "config/dsview.example.json",
+      "size": 169,
+      "sha256": "3832ff41ce90b4424149b4a2312b15fdcbf611bda75a36ec8da91447322a3df7"
+    },
+    {
+      "name": "config/host.example.json",
+      "size": 608,
+      "sha256": "9d7aeaf99cf8e0205afb9f8530640d7e7ddf3dfb92529791d795a2852e1733fe"
+    },
+    {
+      "name": "docs/agent-workflow.md",
+      "size": 1777,
+      "sha256": "dfc5348420a71e124482c02047a9cf990f3eac947707e745a5cad5b67e802c47"
+    },
+    {
+      "name": "docs/bios-calibration.md",
+      "size": 2302,
+      "sha256": "c0f6e3b359b293dd4af7f7e140a884d431d019af8822c505d769d36f29849ce4"
+    },
+    {
+      "name": "docs/dsview.md",
+      "size": 3436,
+      "sha256": "1c0608fc933d20994bfefae002c59a0efe6389bcf9ca1a89934262fa407a33d9"
+    },
+    {
+      "name": "docs/publishing.md",
+      "size": 2256,
+      "sha256": "8f1fda1b76502b06c7953ecee85ade021ec279adbce5376a29113b47e0dad014"
+    },
+    {
+      "name": "docs/queue.md",
+      "size": 2028,
+      "sha256": "529f658fec4b5f5fee6629f0b2265753a12bedfd21dfa9e7d0a32a82c04d0640"
+    },
+    {
+      "name": "docs/setup.md",
+      "size": 9087,
+      "sha256": "5f305d845c34b5561d7696ba4137913eb7034dadb5ccd7c3c6c85836cd7b4d34"
+    },
+    {
+      "name": "docs/workflow.md",
+      "size": 5410,
+      "sha256": "cbe226971d3fd3dc09065df58b707310f5ffbe913c7adf117453f4cf06ccd116"
+    },
+    {
+      "name": "nanokvm_flow/__init__.py",
+      "size": 78,
+      "sha256": "a00fb226a3d7bc474997dfd25f5d50c9d6844a3d878f19c1645a3bcb5515450e"
+    },
+    {
+      "name": "nanokvm_flow/__main__.py",
+      "size": 13398,
+      "sha256": "35a2c6342a18f9e911ac959f4aed82fbaae3b7fea7e2d1f6bf785478256a2b8b"
+    },
+    {
+      "name": "nanokvm_flow/bios.py",
+      "size": 11737,
+      "sha256": "c89b5722b515fd9416fb5f07a0c7c877088b2bf14424c116de42276daa3969e3"
+    },
+    {
+      "name": "nanokvm_flow/boot_entry.py",
+      "size": 12495,
+      "sha256": "e0fcfc72da0831fd30be2689753431031d6b85777b22c4299f03ecc774ee8e6c"
+    },
+    {
+      "name": "nanokvm_flow/boot_timing.py",
+      "size": 10873,
+      "sha256": "32c633ef1355eb1b6bdacfb0812c0199a89d55a73ad86f4a1b6b59c0ba42aed8"
+    },
+    {
+      "name": "nanokvm_flow/client.py",
+      "size": 3775,
+      "sha256": "0f1f90a946b5b4864138b0785b53dfab5d59b6ebde67e84a670e6ed6c2dbc81b"
+    },
+    {
+      "name": "nanokvm_flow/dsview.py",
+      "size": 5627,
+      "sha256": "7be04a8562758c68264354d63a9d8821f241b5cbf232bda052d3cc52df1fcec1"
+    },
+    {
+      "name": "nanokvm_flow/evidence_status.py",
+      "size": 6636,
+      "sha256": "a034c21928b1cf50d9fcf400e6eddc65c87fcc088e28c58f554e3f6cfb7dd57d"
+    },
+    {
+      "name": "nanokvm_flow/hdmi_watch.py",
+      "size": 8031,
+      "sha256": "5961fc61a960addcf9e59f31572c7c8cb4f8a23c1fd25d95500af1dc6b8246ad"
+    },
+    {
+      "name": "nanokvm_flow/host.py",
+      "size": 15064,
+      "sha256": "4ebf71072edad1b9201f9ac8cf9cb499d98e69f53622e943fedf404110490e8d"
+    },
+    {
+      "name": "nanokvm_flow/notify.py",
+      "size": 10429,
+      "sha256": "03b44bea85938358d29a52f9564e9e5daa1a7aa10ae6aa84cb51873ac2af0b9b"
+    },
+    {
+      "name": "nanokvm_flow/state.py",
+      "size": 5306,
+      "sha256": "9e2185532f4bb633014f50f526cd5bbb0521cc04a62e80f0354a25b9fc2f04d7"
+    },
+    {
+      "name": "nanokvm_flow/transfers.py",
+      "size": 9825,
+      "sha256": "b67a636b65091952ed3e3d4f7ce8caf0af1a3546bb1c84f3a52655a8482bec81"
+    },
+    {
+      "name": "nanokvm_flow/vision.py",
+      "size": 4063,
+      "sha256": "0410f01b5fb470fac51d85414861fe96200c1d29334fc2c678cb2dd1bf32a441"
+    },
+    {
+      "name": "nanokvm_flow/worker.py",
+      "size": 13231,
+      "sha256": "e6af7e24a72cfacbe896fa27cdf4a54d8dc4dd616d218a7bedf290612f5edd2e"
+    },
+    {
+      "name": "nanokvm_flow/workflow.py",
+      "size": 12829,
+      "sha256": "60a125d3e9b14c797513fa528e155d9711aa53fc9c5e71ddc418c8d4d9c503d9"
+    },
+    {
+      "name": "profiles/b850m_f12d.json",
+      "size": 10405,
+      "sha256": "ae5b1f3fdde42c2296371cd935f70a6f2dfd0d15d96d9b1ac805884a11721a70"
+    },
+    {
+      "name": "profiles/b850m_f12d_vddp_5mv.json",
+      "size": 11183,
+      "sha256": "f7f8b3262c6c05fecd7ac78f3d3ec67ec3a2c39ac0c837b0647082a71d3fdebc"
+    },
+    {
+      "name": "requirements.txt",
+      "size": 11,
+      "sha256": "b2a3a41cb92969a57ba10746218731ed453fe6528322ddda667df989ac494035"
+    },
+    {
+      "name": "run.ps1",
+      "size": 460,
+      "sha256": "1c71311f0ca4788fb301d93c69adb7007e8f9f1ab0a40c6b06c90888e1ade97b"
+    },
+    {
+      "name": "scripts/read-image-text.ps1",
+      "size": 3408,
+      "sha256": "ccc3d3b61d454d5111db620ba7a337c390645dc0036c1bcfce8db77012e8fd64"
+    },
+    {
+      "name": "target/Install-AtLogon.ps1",
+      "size": 2032,
+      "sha256": "6b372f6261933785f387678093afcf4638bbfc8401bf15d73a4cfc6338567d39"
+    },
+    {
+      "name": "target/README.md",
+      "size": 5008,
+      "sha256": "55819fa3c82ee765f4190d32adc00f06b7650f6e96f89854e7567490173a0681"
+    },
+    {
+      "name": "target/boot_capture_find_control.ps1",
+      "size": 1852,
+      "sha256": "79232b5827434911c9be12cf59685e94872644661b03980e5379d2287316a5c5"
+    },
+    {
+      "name": "target/config.example.json",
+      "size": 1417,
+      "sha256": "ef878cc2920204d20b6629a56e214b0a12b6bc44cc1fef65088f1a58df89a131"
+    },
+    {
+      "name": "target/desktop_capture.py",
+      "size": 13675,
+      "sha256": "dadd425ee5c67e5007d536fc6042f3320039dc8b46497500cac686619103b16c"
+    },
+    {
+      "name": "target/pipeline.py",
+      "size": 17027,
+      "sha256": "d0611d03f4c481df07db8c54bb3dc42ba8ed55c1538eb4461d0d409134d9ace0"
+    },
+    {
+      "name": "target/test_runner.py",
+      "size": 6918,
+      "sha256": "c208457653f178299db6d1bb1c13ae5ebd65f72e1b2bf59d8070146263fadf75"
+    },
+    {
+      "name": "target/vt3_results.py",
+      "size": 10217,
+      "sha256": "4d4b62bdf9016e22b68add030cfffc47682bc1fd0fae349cca30e4c2db4deeef"
+    },
+    {
+      "name": "tests/test_bios.py",
+      "size": 8157,
+      "sha256": "d41efd1ef3f7d29f5c1913d8778443a9627ee9ed70729ce1f0309faa05387c88"
+    },
+    {
+      "name": "tests/test_boot_entry.py",
+      "size": 11967,
+      "sha256": "bc9a8ff952f2cdfbd7048889513744f6cf32915b56a83df575f453fb95cd652d"
+    },
+    {
+      "name": "tests/test_boot_entry_detection.py",
+      "size": 7361,
+      "sha256": "92f41628d019adf7e2e1a0cf08386fa0e88eee06575d2361d5c0db1b917f1b85"
+    },
+    {
+      "name": "tests/test_boot_timing.py",
+      "size": 7292,
+      "sha256": "c16f3ff54588042942d06df582d206c8a1c3ee5c97cb2e9ea386109c314cd884"
+    },
+    {
+      "name": "tests/test_capture_cli.py",
+      "size": 7255,
+      "sha256": "f8e9dd29ee5ae9d4dd70366ca3d45bf516b2e740ba199281c841ef7c49426879"
+    },
+    {
+      "name": "tests/test_dsview.py",
+      "size": 5595,
+      "sha256": "98dcb15e647a5bf0b80a5bc407cb710576f8d281c5709a927993cbf90d797c0e"
+    },
+    {
+      "name": "tests/test_evidence_status.py",
+      "size": 6754,
+      "sha256": "6602537e31d414a16af2ab31d0984eb825b3246d5c43190574e750ada36e96b4"
+    },
+    {
+      "name": "tests/test_firmware_ui_entry.py",
+      "size": 7284,
+      "sha256": "11b8bd7b6928d2eb1fab40a3b9c34ce7b61ddac9800cbd0dd071670aff9366bd"
+    },
+    {
+      "name": "tests/test_flow.py",
+      "size": 4572,
+      "sha256": "1e934c8e8910c09372b7c1a14a5ec81efce1a59fa0ff3be9369a7522a403c545"
+    },
+    {
+      "name": "tests/test_hdmi_watch.py",
+      "size": 6699,
+      "sha256": "1596180cacf1b0d3d151693f236c9a38cc4cd5fba2365fa71b56e72fc7a7f730"
+    },
+    {
+      "name": "tests/test_host_deploy.py",
+      "size": 3392,
+      "sha256": "64cf7b97092fc673753c31c207f05bdc9e716eace6a9b191ee36d48b312663de"
+    },
+    {
+      "name": "tests/test_host_json_transfer.py",
+      "size": 3912,
+      "sha256": "b0be12bb135839367eeafc950e506d79ba72a8e47a097e4ba9c068e6d9848e36"
+    },
+    {
+      "name": "tests/test_notify.py",
+      "size": 5204,
+      "sha256": "a4838bbbfb91248740955cf44ffc245ed98b71c1b6ccadca1303cce4dcf96ee8"
+    },
+    {
+      "name": "tests/test_publication.py",
+      "size": 3752,
+      "sha256": "c52ab9fcd725f6a0a32b3a12f40e50dfb3c42dec821111eff35b794a61369e82"
+    },
+    {
+      "name": "tests/test_target_static.py",
+      "size": 8509,
+      "sha256": "350f17ffe8ddcfe398623325f23e45995498b03251063690e1cf7f054bfe6cdd"
+    },
+    {
+      "name": "tests/test_transfers.py",
+      "size": 11102,
+      "sha256": "1c93c5748e6a5fcc0f0e0ea3d9d1feaec8f2460b035458b677b466fb003be857"
+    },
+    {
+      "name": "tests/test_vddp_readback.py",
+      "size": 8758,
+      "sha256": "6a51f432c28d6876ed7576f4a1008acc00df44c63b9daa383444a7049ea09e7f"
+    },
+    {
+      "name": "tests/test_vision.py",
+      "size": 3671,
+      "sha256": "fa3c18868d163bc404f6d968cfe3e45f2cdafa54a56f4fdc3bdfb3c10b95c156"
+    },
+    {
+      "name": "tests/test_vt3_results.py",
+      "size": 10038,
+      "sha256": "dbc81cc62843c22e793df6eec3c19d100555c3fa5cfdf25e6661f254e3f0a8fa"
+    },
+    {
+      "name": "tests/test_worker.py",
+      "size": 6675,
+      "sha256": "682e1d91a44bc48c0302baeb63c07c28372b4c20cb2bfd0e673154253ca0fe04"
+    },
+    {
+      "name": "tools/deploy_hwtrace_probes.py",
+      "size": 4626,
+      "sha256": "ddfb36b8b128ae999e7f1142e34da73240745f2ff44b92b3883674a7f40aa250"
+    },
+    {
+      "name": "tools/prepare_github.py",
+      "size": 4737,
+      "sha256": "664f8570ebd92de36e8bd86782042e5355907793b4898620996d23042d1ecaea"
+    }
+  ]
+}

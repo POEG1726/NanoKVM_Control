@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "executable": "D:/Tools/DSView-Mod/DSView-core.exe",
+  "output_root": "D:/Captures/NanoKVM",
+  "format": "espi",
+  "command_timeout_ms": 120000
+}
